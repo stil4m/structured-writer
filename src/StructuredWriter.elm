@@ -1,18 +1,35 @@
 module StructuredWriter exposing (Writer, write, breaked, epsilon, parensComma, spaced, string, maybe, indent, bracesComma, sepBy, sepByComma, bracketsComma, sepBySpace, join, append)
 
-
-type alias Writer =
-    Node
+{-| Write structured strings
 
 
-type Node
-    = Sep ( String, String, String ) Bool (List Node)
-    | Breaked (List Node)
+# Types
+
+@docs Writer
+
+
+# Write
+
+@docs write
+
+
+# Utils
+
+@docs append, bracesComma, bracketsComma, breaked, epsilon, indent,join, maybe, parensComma, sepBy, sepByComma, sepBySpace, spaced, string
+
+-}
+
+
+{-| Opaque type which holds the data to be writter
+-}
+type Writer
+    = Sep ( String, String, String ) Bool (List Writer)
+    | Breaked (List Writer)
     | Str String
-    | Append Node Node
-    | Indent Int Node
-    | Spaced (List Node)
-    | Joined (List Node)
+    | Append Writer Writer
+    | Indent Int Writer
+    | Spaced (List Writer)
+    | Joined (List Writer)
 
 
 asIndent : Int -> String
@@ -20,6 +37,8 @@ asIndent =
     flip String.repeat " "
 
 
+{-| Transform a writer to a string
+-}
 write : Writer -> String
 write =
     writeIndented 0
@@ -63,71 +82,105 @@ writeIndented indent w =
             writeIndented indent x ++ writeIndented indent y
 
 
+{-| Add indentation of `n` spaces
+
+    write (indent 2 (string "foo")) == "  foo"
+
+-}
 indent : Int -> Writer -> Writer
 indent =
     Indent
 
 
+{-| Break a few writers over different lines
+-}
 breaked : List Writer -> Writer
 breaked =
     Breaked
 
 
+{-| Write nothing
+-}
 epsilon : Writer
 epsilon =
     Str ""
 
 
-spaced : List Node -> Node
+{-| Join a few writers with spaces
+-}
+spaced : List Writer -> Writer
 spaced =
     Spaced
 
 
-string : String -> Node
+{-| Write a literal string
+-}
+string : String -> Writer
 string =
     Str
 
 
-maybe : Maybe Writer -> Node
+{-| Write something if it is present
+-}
+maybe : Maybe Writer -> Writer
 maybe =
     Maybe.withDefault epsilon
 
 
-parensComma : Bool -> List Node -> Node
+{-| Join writers with commans, enclosed with parens. Puts all things on a new line if the first argument is `True`.
+-}
+parensComma : Bool -> List Writer -> Writer
 parensComma =
     Sep ( "(", ", ", ")" )
 
 
-bracesComma : Bool -> List Node -> Node
+{-| Join writers with commans, enclosed with braces. Puts all things on a new line if the first argument is `True`.
+-}
+bracesComma : Bool -> List Writer -> Writer
 bracesComma =
     Sep ( "{", ", ", "}" )
 
 
-bracketsComma : Bool -> List Node -> Node
+{-| Join writers with commans, enclosed with brackets. Puts all things on a new line if the first argument is `True`.
+-}
+bracketsComma : Bool -> List Writer -> Writer
 bracketsComma =
     Sep ( "[", ", ", "]" )
 
 
-sepByComma : Bool -> List Node -> Node
+{-| Join writers with commas. Puts all things on a new line if the first argument is `True`.
+-}
+sepByComma : Bool -> List Writer -> Writer
 sepByComma =
     Sep ( "", ", ", "" )
 
 
-sepBySpace : Bool -> List Node -> Node
+{-| Join writers with spaces. Puts all things on a new line if the first argument is `True`.
+-}
+sepBySpace : Bool -> List Writer -> Writer
 sepBySpace =
     Sep ( "", " ", "" )
 
 
-sepBy : ( String, String, String ) -> Bool -> List Node -> Node
+{-| Join writers with the second value in the tuple and enclose with the first and last. Puts all things on a new line if the second argument is `True`.
+
+    write (sepBy ("<","-",">") False [string "a", string "b"]) == "<a,b>"
+
+-}
+sepBy : ( String, String, String ) -> Bool -> List Writer -> Writer
 sepBy =
     Sep
 
 
-append : Node -> Node -> Node
+{-| Join two writers into one.
+-}
+append : Writer -> Writer -> Writer
 append =
     Append
 
 
-join : List Node -> Node
+{-| Join a bunch of writers into one.
+-}
+join : List Writer -> Writer
 join =
     Joined
