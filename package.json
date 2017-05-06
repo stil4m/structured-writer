@@ -1,0 +1,30 @@
+{
+  "name": "structured-writer",
+  "version": "1.0.0",
+  "description": "Helpful writer for structured data: indent, seperators ect",
+  "repository": {
+    "type": "git",
+    "url": "github.com/stil4m/structured-writer"
+  },
+  "bugs": {
+    "url": "https://github.com/stil4m/structured-writer/issues",
+    "email": "mstijlaart@gmail.com"
+  },
+  "scripts": {
+    "elm-format": "./node_modules/.bin/elm-format --validate src/ tests/",
+    "test": "./node_modules/.bin/elm-test",
+    "pr-check": "npm install && npm run elm-format && npm run test"
+  },
+  "author": "Mats Stijlaart",
+  "license": "MIT",
+  "keywords": [
+    "elm",
+    "ast",
+    "parser"
+  ],
+  "devDependencies": {
+    "elm": "0.18.0",
+    "elm-test": "0.18.2",
+    "elm-format": "0.6.1-alpha"
+  }
+}
