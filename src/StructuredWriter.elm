@@ -15,7 +15,7 @@ module StructuredWriter exposing (Writer, append, bracesComma, bracketsComma, br
 
 # Utils
 
-@docs append, bracesComma, bracketsComma, breaked, epsilon, indent,join, maybe, parensComma, sepBy, sepByComma, sepBySpace, spaced, string
+@docs append, bracesComma, bracketsComma, breaked, epsilon, indent, join, maybe, parensComma, sepBy, sepByComma, sepBySpace, spaced, string
 
 -}
 
@@ -34,7 +34,7 @@ type Writer
 
 asIndent : Int -> String
 asIndent =
-    flip String.repeat " "
+    \a -> String.repeat a " "
 
 
 {-| Transform a writer to a string
@@ -45,42 +45,42 @@ write =
 
 
 writeIndented : Int -> Writer -> String
-writeIndented indent w =
+writeIndented indent_ w =
     case w of
         Sep ( pre, sep, post ) differentLines items ->
             let
                 seperator =
                     if differentLines then
-                        "\n" ++ asIndent indent ++ sep
+                        "\n" ++ asIndent indent_ ++ sep
                     else
                         sep
             in
             String.concat
                 [ pre
                 , String.join seperator
-                    (List.map (identity >> writeIndented indent) items)
+                    (List.map (identity >> writeIndented indent_) items)
                 , post
                 ]
 
         Breaked items ->
             items
                 |> List.concatMap (writeIndented 0 >> String.split "\n")
-                |> String.join ("\n" ++ asIndent indent)
+                |> String.join ("\n" ++ asIndent indent_)
 
         Str s ->
             s
 
         Indent n next ->
-            asIndent (n + indent) ++ writeIndented (n + indent) next
+            asIndent (n + indent_) ++ writeIndented (n + indent_) next
 
         Spaced items ->
-            String.join " " (List.map (writeIndented indent) items)
+            String.join " " (List.map (writeIndented indent_) items)
 
         Joined items ->
-            String.concat (List.map (writeIndented indent) items)
+            String.concat (List.map (writeIndented indent_) items)
 
         Append x y ->
-            writeIndented indent x ++ writeIndented indent y
+            writeIndented indent_ x ++ writeIndented indent_ y
 
 
 {-| Add indentation of `n` spaces
