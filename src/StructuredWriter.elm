@@ -33,8 +33,8 @@ type Writer
 
 
 asIndent : Int -> String
-asIndent =
-    \a -> String.repeat a " "
+asIndent amount =
+    String.repeat amount " "
 
 
 {-| Transform a writer to a string
