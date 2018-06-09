@@ -54,4 +54,24 @@ suite =
             \() ->
                 Writer.write (Writer.join [ Writer.string "foo", Writer.string "bar" ])
                     |> Expect.equal "foobar"
+        , test "indented sep with breaking lines" <|
+            \() ->
+                Writer.indent 2
+                    (Writer.breaked
+                        [ Writer.string "foo"
+                        , Writer.indent 2
+                            (Writer.spaced
+                                [ Writer.string "bar"
+                                , Writer.sepBySpace True [ Writer.string "baz", Writer.string "qux" ]
+                                ]
+                            )
+                        ]
+                    )
+                    |> Writer.write
+                    |> Expect.equal
+                        (""
+                            ++ "  foo\n"
+                            ++ "    bar baz\n"
+                            ++ "     qux"
+                        )
         ]
