@@ -63,8 +63,9 @@ writeIndented indent w =
                     ]
 
         Breaked items ->
-            --TODO INDENT
-            String.join ("\n" ++ asIndent indent) (List.map (writeIndented indent) items)
+            items
+                |> List.concatMap (writeIndented 0 >> String.split "\n")
+                |> String.join ("\n" ++ asIndent indent)
 
         Str s ->
             s
