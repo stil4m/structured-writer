@@ -1,4 +1,4 @@
-module StructuredWriter exposing (Writer, write, breaked, epsilon, parensComma, spaced, string, maybe, indent, bracesComma, sepBy, sepByComma, bracketsComma, sepBySpace, join, append)
+module StructuredWriter exposing (Writer, append, bracesComma, bracketsComma, breaked, epsilon, indent, join, maybe, parensComma, sepBy, sepByComma, sepBySpace, spaced, string, write)
 
 {-| Write structured strings
 
@@ -55,12 +55,12 @@ writeIndented indent w =
                     else
                         sep
             in
-                String.concat
-                    [ pre
-                    , String.join seperator
-                        (List.map (identity >> writeIndented indent) items)
-                    , post
-                    ]
+            String.concat
+                [ pre
+                , String.join seperator
+                    (List.map (identity >> writeIndented indent) items)
+                , post
+                ]
 
         Breaked items ->
             items

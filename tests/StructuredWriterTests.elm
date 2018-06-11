@@ -1,8 +1,8 @@
 module StructuredWriterTests exposing (suite)
 
-import StructuredWriter as Writer exposing (..)
-import Test exposing (Test, test, describe)
 import Expect
+import StructuredWriter as Writer exposing (..)
+import Test exposing (Test, describe, test)
 
 
 suite : Test
@@ -12,8 +12,8 @@ suite =
             \() ->
                 Writer.write
                     (parensComma False
-                        [ (string "x")
-                        , (string "y")
+                        [ string "x"
+                        , string "y"
                         ]
                     )
                     |> Expect.equal "(x, y)"
@@ -21,8 +21,8 @@ suite =
             \() ->
                 Writer.write
                     (parensComma True
-                        [ (string "x")
-                        , (string "y")
+                        [ string "x"
+                        , string "y"
                         ]
                     )
                     |> Expect.equal "(x\n, y)"
