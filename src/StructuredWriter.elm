@@ -1,4 +1,8 @@
-module StructuredWriter exposing (Writer, append, bracesComma, bracketsComma, breaked, epsilon, indent, join, maybe, parensComma, sepBy, sepByComma, sepBySpace, spaced, string, write)
+module StructuredWriter exposing
+    ( Writer
+    , write
+    , append, bracesComma, bracketsComma, breaked, epsilon, indent, join, maybe, parensComma, sepBy, sepByComma, sepBySpace, spaced, string
+    )
 
 {-| Write structured strings
 
@@ -52,6 +56,7 @@ writeIndented indent_ w =
                 seperator =
                     if differentLines then
                         "\n" ++ asIndent indent_ ++ sep
+
                     else
                         sep
             in
@@ -165,7 +170,7 @@ sepBySpace =
 
 {-| Join writers with the second value in the tuple and enclose with the first and last. Puts all things on a new line if the second argument is `True`.
 
-    write (sepBy ("<","-",">") False [string "a", string "b"]) == "<a,b>"
+    write (sepBy ( "<", "-", ">" ) False [ string "a", string "b" ]) == "<a,b>"
 
 -}
 sepBy : ( String, String, String ) -> Bool -> List Writer -> Writer
