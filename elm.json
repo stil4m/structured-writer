@@ -3,7 +3,7 @@
     "name": "stil4m/structured-writer",
     "summary": "Helpful writer for structured data: indent, seperators ect",
     "license": "MIT",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "exposed-modules": [
         "StructuredWriter"
     ],
